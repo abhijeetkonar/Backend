@@ -199,23 +199,23 @@ module.exports.deleteContribution = async (req, res, next) => {
             if (!paper) {
                 return res.status(404).json({ message: 'Paper not found' });
             }
-            const papers = await Paper.find({ _id: { $in: user.papersContributed } }).skip(skip).limit(limit);
+            // const papers = await Paper.find({ _id: { $in: user.papersContributed } });
             await userModel.updateOne(
                 { _id: req.user._id },
                 { $pull: { papersContributed: contributionId } }
             );
-            res.status(200).json({ message: 'Contribution deleted successfully', papers: papers });
+            res.status(200).json({ message: 'Contribution deleted successfully' });
         } else {
             const practical = await Practical.findByIdAndDelete(contributionId);
             if (!practical) {
                 return res.status(404).json({ message: 'Practical not found' });
             }
-            const practicals = await Practical.find({ _id: { $in: user.practicalsContributed } }).skip(skip).limit(limit);
+            // const practicals = await Practical.find({ _id: { $in: user.practicalsContributed } });
             await userModel.updateOne(
                 { _id: req.user._id },
                 { $pull: { practicalsContributed: contributionId } }
             );
-            res.status(200).json({ message: 'Contribution deleted successfully', practicals: practicals });
+            res.status(200).json({ message: 'Contribution deleted successfully' });
         }
         user.totalContributions = user.totalContributions - 1;
         await user.save();
